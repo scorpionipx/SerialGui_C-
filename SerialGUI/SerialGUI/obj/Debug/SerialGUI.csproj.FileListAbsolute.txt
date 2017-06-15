@@ -1,0 +1,9 @@
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\bin\Debug\SerialGUI.exe.config
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\bin\Debug\SerialGUI.exe
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\bin\Debug\SerialGUI.pdb
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.csprojResolveAssemblyReference.cache
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.Form1.resources
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.Properties.Resources.resources
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.csproj.GenerateResource.Cache
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.exe
+c:\users\uidq6025\documents\visual studio 2017\Projects\SerialGUI\SerialGUI\obj\Debug\SerialGUI.pdb
