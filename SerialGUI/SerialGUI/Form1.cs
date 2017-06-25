@@ -22,7 +22,7 @@ namespace SerialGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            __openPort__("COM4");
+            __openPort__("COM3");
             angle_label.Text = "Angle: ";
         }
 
