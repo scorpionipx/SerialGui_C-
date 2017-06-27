@@ -14,6 +14,10 @@ namespace SerialGUI
     public partial class Form1 : Form
     {
         SerialPort evb_5 = new SerialPort();
+        int[] BAUD_RATES = new int[] {300, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200, 230400 };
+        int[] DATA_BITS = new int[] {5, 6, 7, 8 };
+        string[] PARITIES = new string[] { "Odd", "Even", "None" };
+        int[] STOP_BITS = new int[] {1, 2 };
 
         public Form1()
         {
@@ -22,11 +26,16 @@ namespace SerialGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            __openPort__("COM3");
+            //__openPort__("COM3", 9600);
             angle_label.Text = "Angle: ";
+            __update_baud_rates__();
+            __update_databits__();
+            __update_parity__();
+            __update_stop_bits__();
+            configuration_panel.Visible = false;
         }
 
-        private void __openPort__(String port)
+        private void __openPort__(String port, int baudrate)
         {
             evb_5.PortName = port;
             evb_5.BaudRate = 9600;
@@ -110,6 +119,58 @@ namespace SerialGUI
             evb_5.Write(command_id_as_byte, 0, 1);
             evb_5.Write(data_byte_1_as_byte, 0, 1);
             evb_5.Write(data_byte_2_as_byte, 0, 1);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void configuration_refresh_button_Click(object sender, EventArgs e)
+        {
+            __update_available_ports_names__();
+        }
+
+        private void __update_available_ports_names__()
+        {
+            // Get a list of serial port names.
+            string[] ports = SerialPort.GetPortNames();
+            foreach(string port in ports)
+            {
+                configuration_port_combobox.Items.Add(port);
+            }
+        }
+
+        private void __update_baud_rates__()
+        {
+            foreach(int BAUD_RATE in BAUD_RATES)
+            {
+                configuration_baudrate_combobox.Items.Add(BAUD_RATE);
+            }
+        }
+
+        private void __update_databits__()
+        {
+            foreach (int DATA_BIT in DATA_BITS)
+            {
+                configuration_databits_combobox.Items.Add(DATA_BIT);
+            }
+        }
+
+        private void __update_parity__()
+        {
+            foreach (string PARITY in PARITIES)
+            {
+                configuration_parity_combobox.Items.Add(PARITY);
+            }
+        }
+
+        private void __update_stop_bits__()
+        {
+            foreach (int STOP_BIT in STOP_BITS)
+            {
+                configuration_stopbits_combobox.Items.Add(STOP_BIT);
+            }
         }
     }
 }
