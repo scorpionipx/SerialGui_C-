@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.status_label = new System.Windows.Forms.Label();
             this.dataTextBox = new System.Windows.Forms.RichTextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -35,19 +36,23 @@
             this.angle_label = new System.Windows.Forms.Label();
             this.configuration_port_combobox = new System.Windows.Forms.ComboBox();
             this.configuration_panel = new System.Windows.Forms.Panel();
+            this.configuration_default_button = new System.Windows.Forms.Button();
+            this.configuration_refresh_button = new System.Windows.Forms.Button();
+            this.configuration_close_button = new System.Windows.Forms.Button();
+            this.configuration_open_button = new System.Windows.Forms.Button();
+            this.configuration_stopbits_label = new System.Windows.Forms.Label();
+            this.configuration_stopbits_combobox = new System.Windows.Forms.ComboBox();
+            this.configuration_parity_label = new System.Windows.Forms.Label();
+            this.configuration_parity_combobox = new System.Windows.Forms.ComboBox();
             this.configuration_databits_label = new System.Windows.Forms.Label();
             this.configuration_databits_combobox = new System.Windows.Forms.ComboBox();
             this.configuration_baudrate_label = new System.Windows.Forms.Label();
             this.configuration_baudrate_combobox = new System.Windows.Forms.ComboBox();
             this.configuration_port_label = new System.Windows.Forms.Label();
             this.configuration_title_label = new System.Windows.Forms.Label();
-            this.configuration_parity_label = new System.Windows.Forms.Label();
-            this.configuration_parity_combobox = new System.Windows.Forms.ComboBox();
-            this.configuration_stopbits_label = new System.Windows.Forms.Label();
-            this.configuration_stopbits_combobox = new System.Windows.Forms.ComboBox();
-            this.configuration_open_button = new System.Windows.Forms.Button();
-            this.configuration_close_button = new System.Windows.Forms.Button();
-            this.configuration_refresh_button = new System.Windows.Forms.Button();
+            this.configuration_visibility_button = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.send_data_check_box = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.configuration_panel.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +60,7 @@
             // status_label
             // 
             this.status_label.AutoSize = true;
-            this.status_label.Location = new System.Drawing.Point(312, 331);
+            this.status_label.Location = new System.Drawing.Point(9, 404);
             this.status_label.Name = "status_label";
             this.status_label.Size = new System.Drawing.Size(35, 13);
             this.status_label.TabIndex = 0;
@@ -110,6 +115,7 @@
             // 
             // configuration_panel
             // 
+            this.configuration_panel.Controls.Add(this.configuration_default_button);
             this.configuration_panel.Controls.Add(this.configuration_refresh_button);
             this.configuration_panel.Controls.Add(this.configuration_close_button);
             this.configuration_panel.Controls.Add(this.configuration_open_button);
@@ -126,8 +132,83 @@
             this.configuration_panel.Controls.Add(this.configuration_port_combobox);
             this.configuration_panel.Location = new System.Drawing.Point(12, 19);
             this.configuration_panel.Name = "configuration_panel";
-            this.configuration_panel.Size = new System.Drawing.Size(213, 216);
+            this.configuration_panel.Size = new System.Drawing.Size(213, 212);
             this.configuration_panel.TabIndex = 6;
+            // 
+            // configuration_default_button
+            // 
+            this.configuration_default_button.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.configuration_default_button.Location = new System.Drawing.Point(116, 3);
+            this.configuration_default_button.Name = "configuration_default_button";
+            this.configuration_default_button.Size = new System.Drawing.Size(94, 17);
+            this.configuration_default_button.TabIndex = 19;
+            this.configuration_default_button.Text = "restore default";
+            this.configuration_default_button.UseVisualStyleBackColor = true;
+            this.configuration_default_button.Click += new System.EventHandler(this.configuration_default_button_Click);
+            // 
+            // configuration_refresh_button
+            // 
+            this.configuration_refresh_button.Location = new System.Drawing.Point(9, 188);
+            this.configuration_refresh_button.Name = "configuration_refresh_button";
+            this.configuration_refresh_button.Size = new System.Drawing.Size(193, 23);
+            this.configuration_refresh_button.TabIndex = 18;
+            this.configuration_refresh_button.Text = "Refresh PORTS";
+            this.configuration_refresh_button.UseVisualStyleBackColor = true;
+            this.configuration_refresh_button.Click += new System.EventHandler(this.configuration_refresh_button_Click);
+            // 
+            // configuration_close_button
+            // 
+            this.configuration_close_button.Location = new System.Drawing.Point(110, 159);
+            this.configuration_close_button.Name = "configuration_close_button";
+            this.configuration_close_button.Size = new System.Drawing.Size(92, 23);
+            this.configuration_close_button.TabIndex = 17;
+            this.configuration_close_button.Text = "Close";
+            this.configuration_close_button.UseVisualStyleBackColor = true;
+            this.configuration_close_button.Click += new System.EventHandler(this.configuration_close_button_Click);
+            // 
+            // configuration_open_button
+            // 
+            this.configuration_open_button.Location = new System.Drawing.Point(9, 159);
+            this.configuration_open_button.Name = "configuration_open_button";
+            this.configuration_open_button.Size = new System.Drawing.Size(92, 23);
+            this.configuration_open_button.TabIndex = 16;
+            this.configuration_open_button.Text = "Open";
+            this.configuration_open_button.UseVisualStyleBackColor = true;
+            this.configuration_open_button.Click += new System.EventHandler(this.configuration_open_button_Click);
+            // 
+            // configuration_stopbits_label
+            // 
+            this.configuration_stopbits_label.AutoSize = true;
+            this.configuration_stopbits_label.Location = new System.Drawing.Point(6, 132);
+            this.configuration_stopbits_label.Name = "configuration_stopbits_label";
+            this.configuration_stopbits_label.Size = new System.Drawing.Size(63, 13);
+            this.configuration_stopbits_label.TabIndex = 15;
+            this.configuration_stopbits_label.Text = "STOP BITS";
+            // 
+            // configuration_stopbits_combobox
+            // 
+            this.configuration_stopbits_combobox.FormattingEnabled = true;
+            this.configuration_stopbits_combobox.Location = new System.Drawing.Point(78, 129);
+            this.configuration_stopbits_combobox.Name = "configuration_stopbits_combobox";
+            this.configuration_stopbits_combobox.Size = new System.Drawing.Size(132, 21);
+            this.configuration_stopbits_combobox.TabIndex = 14;
+            // 
+            // configuration_parity_label
+            // 
+            this.configuration_parity_label.AutoSize = true;
+            this.configuration_parity_label.Location = new System.Drawing.Point(6, 105);
+            this.configuration_parity_label.Name = "configuration_parity_label";
+            this.configuration_parity_label.Size = new System.Drawing.Size(46, 13);
+            this.configuration_parity_label.TabIndex = 13;
+            this.configuration_parity_label.Text = "PARITY";
+            // 
+            // configuration_parity_combobox
+            // 
+            this.configuration_parity_combobox.FormattingEnabled = true;
+            this.configuration_parity_combobox.Location = new System.Drawing.Point(78, 102);
+            this.configuration_parity_combobox.Name = "configuration_parity_combobox";
+            this.configuration_parity_combobox.Size = new System.Drawing.Size(132, 21);
+            this.configuration_parity_combobox.TabIndex = 12;
             // 
             // configuration_databits_label
             // 
@@ -182,73 +263,38 @@
             this.configuration_title_label.TabIndex = 6;
             this.configuration_title_label.Text = "Configuration panel";
             // 
-            // configuration_parity_label
+            // configuration_visibility_button
             // 
-            this.configuration_parity_label.AutoSize = true;
-            this.configuration_parity_label.Location = new System.Drawing.Point(6, 105);
-            this.configuration_parity_label.Name = "configuration_parity_label";
-            this.configuration_parity_label.Size = new System.Drawing.Size(46, 13);
-            this.configuration_parity_label.TabIndex = 13;
-            this.configuration_parity_label.Text = "PARITY";
+            this.configuration_visibility_button.BackColor = System.Drawing.Color.Red;
+            this.configuration_visibility_button.Location = new System.Drawing.Point(12, 9);
+            this.configuration_visibility_button.Name = "configuration_visibility_button";
+            this.configuration_visibility_button.Size = new System.Drawing.Size(52, 10);
+            this.configuration_visibility_button.TabIndex = 7;
+            this.configuration_visibility_button.UseVisualStyleBackColor = false;
+            this.configuration_visibility_button.Click += new System.EventHandler(this.configuration_visibility_button_Click);
             // 
-            // configuration_parity_combobox
+            // timer1
             // 
-            this.configuration_parity_combobox.FormattingEnabled = true;
-            this.configuration_parity_combobox.Location = new System.Drawing.Point(78, 102);
-            this.configuration_parity_combobox.Name = "configuration_parity_combobox";
-            this.configuration_parity_combobox.Size = new System.Drawing.Size(132, 21);
-            this.configuration_parity_combobox.TabIndex = 12;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // configuration_stopbits_label
+            // send_data_check_box
             // 
-            this.configuration_stopbits_label.AutoSize = true;
-            this.configuration_stopbits_label.Location = new System.Drawing.Point(6, 132);
-            this.configuration_stopbits_label.Name = "configuration_stopbits_label";
-            this.configuration_stopbits_label.Size = new System.Drawing.Size(63, 13);
-            this.configuration_stopbits_label.TabIndex = 15;
-            this.configuration_stopbits_label.Text = "STOP BITS";
-            // 
-            // configuration_stopbits_combobox
-            // 
-            this.configuration_stopbits_combobox.FormattingEnabled = true;
-            this.configuration_stopbits_combobox.Location = new System.Drawing.Point(78, 129);
-            this.configuration_stopbits_combobox.Name = "configuration_stopbits_combobox";
-            this.configuration_stopbits_combobox.Size = new System.Drawing.Size(132, 21);
-            this.configuration_stopbits_combobox.TabIndex = 14;
-            // 
-            // configuration_open_button
-            // 
-            this.configuration_open_button.Location = new System.Drawing.Point(9, 159);
-            this.configuration_open_button.Name = "configuration_open_button";
-            this.configuration_open_button.Size = new System.Drawing.Size(92, 23);
-            this.configuration_open_button.TabIndex = 16;
-            this.configuration_open_button.Text = "Open";
-            this.configuration_open_button.UseVisualStyleBackColor = true;
-            // 
-            // configuration_close_button
-            // 
-            this.configuration_close_button.Location = new System.Drawing.Point(110, 159);
-            this.configuration_close_button.Name = "configuration_close_button";
-            this.configuration_close_button.Size = new System.Drawing.Size(92, 23);
-            this.configuration_close_button.TabIndex = 17;
-            this.configuration_close_button.Text = "Close";
-            this.configuration_close_button.UseVisualStyleBackColor = true;
-            // 
-            // configuration_refresh_button
-            // 
-            this.configuration_refresh_button.Location = new System.Drawing.Point(9, 188);
-            this.configuration_refresh_button.Name = "configuration_refresh_button";
-            this.configuration_refresh_button.Size = new System.Drawing.Size(193, 23);
-            this.configuration_refresh_button.TabIndex = 18;
-            this.configuration_refresh_button.Text = "Refresh PORTS";
-            this.configuration_refresh_button.UseVisualStyleBackColor = true;
-            this.configuration_refresh_button.Click += new System.EventHandler(this.configuration_refresh_button_Click);
+            this.send_data_check_box.AutoSize = true;
+            this.send_data_check_box.Location = new System.Drawing.Point(188, 338);
+            this.send_data_check_box.Name = "send_data_check_box";
+            this.send_data_check_box.Size = new System.Drawing.Size(75, 17);
+            this.send_data_check_box.TabIndex = 8;
+            this.send_data_check_box.Text = "Send data";
+            this.send_data_check_box.UseVisualStyleBackColor = true;
+            this.send_data_check_box.CheckedChanged += new System.EventHandler(this.send_data_check_box_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1191, 512);
+            this.Controls.Add(this.send_data_check_box);
+            this.Controls.Add(this.configuration_visibility_button);
             this.Controls.Add(this.configuration_panel);
             this.Controls.Add(this.angle_label);
             this.Controls.Add(this.trackBar1);
@@ -288,6 +334,10 @@
         private System.Windows.Forms.Button configuration_close_button;
         private System.Windows.Forms.Button configuration_open_button;
         private System.Windows.Forms.Button configuration_refresh_button;
+        private System.Windows.Forms.Button configuration_default_button;
+        private System.Windows.Forms.Button configuration_visibility_button;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.CheckBox send_data_check_box;
     }
 }
 

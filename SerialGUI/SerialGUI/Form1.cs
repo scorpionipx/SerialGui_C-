@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 
@@ -13,11 +6,19 @@ namespace SerialGUI
 {
     public partial class Form1 : Form
     {
-        SerialPort evb_5 = new SerialPort();
+        SerialPort serial_port = new SerialPort();
         int[] BAUD_RATES = new int[] {300, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200, 230400 };
         int[] DATA_BITS = new int[] {5, 6, 7, 8 };
         string[] PARITIES = new string[] { "Odd", "Even", "None" };
         int[] STOP_BITS = new int[] {1, 2 };
+
+        int angle = 0;
+        int command_id = 1;
+        int data_byte_1;
+        int data_byte_2;
+        byte[] command_id_as_byte;
+        byte[] data_byte_1_as_byte;
+        byte[] data_byte_2_as_byte;
 
         public Form1()
         {
@@ -28,22 +29,71 @@ namespace SerialGUI
         {
             //__openPort__("COM3", 9600);
             angle_label.Text = "Angle: ";
-            __update_baud_rates__();
-            __update_databits__();
-            __update_parity__();
-            __update_stop_bits__();
-            configuration_panel.Visible = false;
+            __set_configuraion_default_values__();
         }
 
-        private void __openPort__(String port, int baudrate)
+        private void __openPort__(String port, int baudrate, string parity, int databits, int stopbits)
         {
-            evb_5.PortName = port;
-            evb_5.BaudRate = 9600;
-            evb_5.Parity = Parity.None;
-            evb_5.DataBits = 8;
-            evb_5.StopBits = StopBits.One;
-            evb_5.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
-            evb_5.Open();
+            serial_port.PortName = port;
+            serial_port.BaudRate = baudrate;
+            switch(parity)
+            {
+                case "Odd":
+                    {
+                        serial_port.Parity = Parity.Odd;
+                        break;
+                    }
+                case "Even":
+                    {
+                        serial_port.Parity = Parity.Even;
+                        break;
+                    }
+                case "None":
+                    {
+                        serial_port.Parity = Parity.None;
+                        break;
+                    }
+                default:
+                    {
+                        serial_port.Parity = Parity.None;
+                        break;
+                    }
+            }
+
+            serial_port.DataBits = databits;
+
+            switch(stopbits)
+            {
+                case 1:
+                    {
+                        serial_port.StopBits = StopBits.One;
+                        break;
+                    }
+                case 2:
+                    {
+                        serial_port.StopBits = StopBits.Two;
+                        break;
+                    }
+                default:
+                    {
+                        serial_port.StopBits = StopBits.One;
+                        break;
+                    }
+            }
+            
+            serial_port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
+            try
+            {
+                serial_port.Open();
+                configuration_open_button.Enabled = false;
+                configuration_close_button.Enabled = true;
+
+                status_label.Text = "Port opened!";
+            }
+            catch(Exception e)
+            {
+                status_label.Text = e.ToString();
+            }
         }
 
         delegate void SetTextCallback(string text);
@@ -74,7 +124,7 @@ namespace SerialGUI
             // Show all the incoming data in the port's buffer
             // Console.WriteLine(evb_5.ReadExisting());
 
-            String txt = evb_5.ReadExisting().ToString();
+            String txt = serial_port.ReadExisting().ToString();
             SetText(txt);
         }
 
@@ -93,32 +143,26 @@ namespace SerialGUI
             byte[] data_byte_1_as_byte = BitConverter.GetBytes(data_byte_1);
             byte[] data_byte_2_as_byte = BitConverter.GetBytes(data_byte_2);
 
-            evb_5.Write(command_id_as_byte, 0, 1);
-            evb_5.Write(data_byte_1_as_byte, 0, 1);
-            evb_5.Write(data_byte_2_as_byte, 0, 1);
+            serial_port.Write(command_id_as_byte, 0, 1);
+            serial_port.Write(data_byte_1_as_byte, 0, 1);
+            serial_port.Write(data_byte_2_as_byte, 0, 1);
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            int angle = trackBar1.Value;
+            angle = trackBar1.Value;
 
             angle_label.Text = "Angle: " + (angle/10).ToString() + "." + (angle%10).ToString() + "°";
 
-            int command_id = 1;
-            int data_byte_1;
-            int data_byte_2;
 
-            byte[] command_id_as_byte = BitConverter.GetBytes(command_id);
+            command_id_as_byte = BitConverter.GetBytes(command_id);
 
             data_byte_1 = angle >> 8;
             data_byte_2 = angle & 0xFF;
 
-            byte[] data_byte_1_as_byte = BitConverter.GetBytes(data_byte_1);
-            byte[] data_byte_2_as_byte = BitConverter.GetBytes(data_byte_2);
+            data_byte_1_as_byte = BitConverter.GetBytes(data_byte_1);
+            data_byte_2_as_byte = BitConverter.GetBytes(data_byte_2);
 
-            evb_5.Write(command_id_as_byte, 0, 1);
-            evb_5.Write(data_byte_1_as_byte, 0, 1);
-            evb_5.Write(data_byte_2_as_byte, 0, 1);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -133,43 +177,153 @@ namespace SerialGUI
 
         private void __update_available_ports_names__()
         {
+            configuration_port_combobox.Items.Clear();
+
             // Get a list of serial port names.
             string[] ports = SerialPort.GetPortNames();
-            foreach(string port in ports)
+            configuration_port_combobox.Items.Add("None");
+            
+            foreach (string port in ports)
             {
                 configuration_port_combobox.Items.Add(port);
+                configuration_port_combobox.SelectedIndex = configuration_port_combobox.FindString("None");
             }
         }
 
         private void __update_baud_rates__()
         {
-            foreach(int BAUD_RATE in BAUD_RATES)
+            configuration_baudrate_combobox.Items.Clear();
+
+            foreach (int BAUD_RATE in BAUD_RATES)
             {
                 configuration_baudrate_combobox.Items.Add(BAUD_RATE);
+                configuration_baudrate_combobox.SelectedIndex = configuration_baudrate_combobox.FindString("9600");
             }
         }
 
         private void __update_databits__()
         {
+            configuration_databits_combobox.Items.Clear();
+
             foreach (int DATA_BIT in DATA_BITS)
             {
                 configuration_databits_combobox.Items.Add(DATA_BIT);
+                configuration_databits_combobox.SelectedIndex = configuration_databits_combobox.FindString("8");
             }
         }
 
         private void __update_parity__()
         {
+            configuration_parity_combobox.Items.Clear();
+
             foreach (string PARITY in PARITIES)
             {
                 configuration_parity_combobox.Items.Add(PARITY);
+                configuration_parity_combobox.SelectedIndex = configuration_parity_combobox.FindString("None");
             }
         }
 
         private void __update_stop_bits__()
         {
+            configuration_stopbits_combobox.Items.Clear();
+
             foreach (int STOP_BIT in STOP_BITS)
             {
                 configuration_stopbits_combobox.Items.Add(STOP_BIT);
+                configuration_stopbits_combobox.SelectedIndex = configuration_stopbits_combobox.FindString("1");
+            }
+        }
+
+        private void __set_configuraion_default_values__()
+        {
+            __update_available_ports_names__();
+            __update_baud_rates__();
+            __update_databits__();
+            __update_parity__();
+            __update_stop_bits__();
+
+            configuration_close_button.Enabled = false;
+        }
+
+        private void configuration_default_button_Click(object sender, EventArgs e)
+        {
+            __set_configuraion_default_values__();
+        }
+
+        private void configuration_visibility_button_Click(object sender, EventArgs e)
+        {
+            if(configuration_panel.Visible == false)
+            {
+                __show_configuration_panel__();
+            }
+            else
+            {
+                __hide_configuration_panel__();
+            }
+        }
+
+        private void __hide_configuration_panel__()
+        {
+            configuration_panel.Visible = false;
+            configuration_visibility_button.BackColor = System.Drawing.Color.Lime;
+        }
+
+        private void __show_configuration_panel__()
+        {
+            configuration_panel.Visible = true;
+            configuration_visibility_button.BackColor = System.Drawing.Color.Red;
+        }
+
+        private void configuration_open_button_Click(object sender, EventArgs e)
+        {
+            string port = configuration_port_combobox.Text;
+            int baudrate = (int)configuration_baudrate_combobox.SelectedItem;
+            string parity = configuration_parity_combobox.Text;
+            int databits = (int)configuration_databits_combobox.SelectedItem;
+            int stopbits = (int)configuration_stopbits_combobox.SelectedItem;
+
+            __openPort__(port, baudrate, parity, databits, stopbits);
+        }
+
+        private void configuration_close_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                serial_port.Close();
+
+                configuration_open_button.Enabled = true;
+                configuration_close_button.Enabled = false;
+
+                status_label.Text = "Port closed!";
+            }
+            catch(Exception err)
+            {
+                status_label.Text = err.ToString();
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(serial_port.IsOpen)
+            {
+                serial_port.Write(command_id_as_byte, 0, 1);
+                serial_port.Write(data_byte_1_as_byte, 0, 1);
+                serial_port.Write(data_byte_2_as_byte, 0, 1);
+            }
+        }
+
+        private void send_data_check_box_CheckedChanged(object sender, EventArgs e)
+        {
+            if(send_data_check_box.Checked)
+            {
+                if(timer1.Enabled == false)
+                {
+                    timer1.Start();
+                }
+            }
+            else
+            {
+                timer1.Stop();
             }
         }
     }
